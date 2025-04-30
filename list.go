@@ -60,6 +60,10 @@ func (l *List[K, V]) Len() int {
 	return l.size
 }
 
+func (l *List[K, V]) Cap() int {
+	return l.cap
+}
+
 // Front returns the first element of list l or nil if the list is empty.
 func (l *List[K, V]) Front() *Entry[K, V] {
 	if l.size == 0 {
@@ -83,6 +87,10 @@ func (l *List[K, V]) Back() *Entry[K, V] {
 }
 
 func (l *List[K, V]) remove(e *Entry[K, V]) (V, error) {
+	if e == nil {
+		var empty V
+		return empty, errors.New("node null")
+	}
 	if e.next == -1 || e.prev == -1 {
 		return e.Value, errors.New("unknown node")
 	}
@@ -324,7 +332,9 @@ func (l *List[K, V]) UpdateEntry(idx int, e Entry[K, V]) error {
 	if markNode.prev == -1 || markNode.next == -1 {
 		return errors.New("invalid node")
 	}
-	l.data[idx] = e
+	l.data[idx].Key = e.Key
+	l.data[idx].HashId = e.HashId
+	l.data[idx].Value = e.Value
 	return nil
 }
 

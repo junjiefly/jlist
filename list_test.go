@@ -201,11 +201,50 @@ func TestClear(t *testing.T) {
 	}
 }
 
-func BenchmarkTest(b *testing.B) {
-	list := NewList[string, []byte](10000000)
-	var v = []byte("1234567")
-	var key = "abcdefg"
+func BenchmarkNewList(b *testing.B) {
+	capacity := 1000
 	for i := 0; i < b.N; i++ {
-		list.PushBack(key, v)
+		NewList[int, int](capacity)
+	}
+}
+
+func BenchmarkPushFront(b *testing.B) {
+	capacity := 1000
+	ll := NewList[int, int](capacity)
+	for i := 0; i < b.N; i++ {
+		ll.PushFront(i, i)
+	}
+}
+
+func BenchmarkPushBack(b *testing.B) {
+	capacity := 1000
+	ll := NewList[int, int](capacity)
+	for i := 0; i < b.N; i++ {
+		ll.PushBack(i, i)
+	}
+}
+
+func BenchmarkRemove(b *testing.B) {
+	capacity := 1000
+	ll := NewList[int, int](capacity)
+	for i := 0; i < capacity; i++ {
+		ll.PushBack(i, i)
+	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		entry := ll.Front()
+		ll.Remove(entry)
+	}
+}
+
+func BenchmarkIterate(b *testing.B) {
+	capacity := 1000
+	ll := NewList[int, int](capacity)
+	for i := 0; i < capacity; i++ {
+		ll.PushBack(i, i)
+	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		ll.Iterate()
 	}
 }
